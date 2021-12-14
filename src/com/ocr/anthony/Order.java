@@ -39,4 +39,29 @@ public class Order {
         int nb = sc.nextInt();
         this.displaySelectedMenu(nb);
     }
+
+    /**
+     * Display a selected side depending on all sides enable or not
+     * All sides = vegetables, fries and rice
+     * Not all sides = rice or not
+     *
+     * @param nbSide         the selected side
+     * @param allSidesEnable enable display for all side or not
+     */
+    public void displaySelectedSide(int nbSide, boolean allSidesEnable) {
+        if (allSidesEnable) {
+            switch (nbSide) {
+                case 1 -> System.out.println("Vous avez choisi comme accompagnement : légumes frais");
+                case 2 -> System.out.println("Vous avez choisi comme accompagnement : frites");
+                case 3 -> System.out.println("Vous avez choisi comme accompagnement : riz");
+                default -> System.out.println("Vous n'avez pas choisi d'accompagnement parmi les choix proposés");
+            }
+        } else {
+            switch (nbSide) {
+                case 1 -> System.out.println("Vous avez choisi comme accompagnement : riz");
+                case 2 -> System.out.println("Vous avez choisi comme accompagnement : pas de riz");
+                default -> System.out.println("Vous n'avez pas choisi d'accompagnement parmi les choix proposés");
+            }
+        }
+    }
 }
