@@ -66,6 +66,7 @@ public class OrderTest {
         String output = outContent.toString().replace("\r\n", "\n");
         assertTrue(output.endsWith("Vous avez choisi comme menu : poulet\n"));
         assertTrue(output.length() > "Vous avez choisi comme menu : poulet\n".length());
+
     }
 
 }
