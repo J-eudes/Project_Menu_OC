@@ -3,8 +3,8 @@ package com.ocr.anthony;
 import java.util.Scanner;
 
 public class Order {
-
     Scanner sc = new Scanner(System.in);
+    String orderSummary = "";
 
     /**
      * Display all available menus in the restaurant.
@@ -16,67 +16,57 @@ public class Order {
         System.out.println("3 - végétarien");
         System.out.println("Que souhaitez-vous comme menu ?");
     }
-
     /**
      * Display a selected menu.
-     *
      * @param nbMenu The selected menu.
      */
     public void displaySelectedMenu(int nbMenu) {
-        if (nbMenu == 1) {
-            System.out.println("Vous avez choisi comme menu : poulet");
-        } else if (nbMenu == 2) {
-            System.out.println("Vous avez choisi comme menu : boeuf");
-        } else if (nbMenu == 3) {
-            System.out.println("Vous avez choisi comme menu : végétarien");
-        } else {
-            System.out.println("Vous n'avez pas choisi de menu parmi les choix proposés");
+        switch (nbMenu) {
+            case 1 -> System.out.println("Vous avez choisi comme menu : poulet");
+            case 2 -> System.out.println("Vous avez choisi comme menu : boeuf");
+            case 3 -> System.out.println("Vous avez choisi comme menu : végétarien");
+            default -> System.out.println("Vous n'avez pas choisi de menu parmi les choix proposés");
         }
-
     }
-
     /**
      * Run asking process for a menu.
      */
     public void runMenu() {
-        this.displayAvailableMenu();
-        int nbMenu;
-        do {
-            nbMenu = sc.nextInt();
-            this.displaySelectedMenu(nbMenu);
-            switch (nbMenu) {
-                case 1:
-                    askSide(true);
-                    askDrink();
-                    break;
-                case 2:
-                    askSide(true);
-                    break;
-                case 3:
-                    askSide(false);
-                    askDrink();
-                    break;
+        int nbMenu = askMenu();
+        switch (nbMenu) {
+            case 1 -> {
+                askSide(true);
+                askDrink();
             }
-        } while (nbMenu < 1 || nbMenu > 3);
+            case 2 -> askSide(true);
+            case 3 -> {
+                askSide(false);
+                askDrink();
+            }
+        }
     }
 
     /**
      * Run asking process for several menus.
      */
     public void runMenus() {
-        System.out.println("Combien souhaitez vous commander de menu ?");
+        System.out.println("Combien de menus souhaitez-vous commander ?");
         int menuQuantity = sc.nextInt();
+        orderSummary = "Résumé de votre commande :%n";
         for (int i = 0; i < menuQuantity; i++) {
+            orderSummary += "Menu " + (i + 1) + ":%n";
             runMenu();
         }
+        System.out.println("");
+        System.out.println(String.format(orderSummary));
     }
 
     /**
-     * Display a selected side depending on all sides enable or not
-     * All sides = vegetables, fries and rice
-     * Not all sides = rice or not
+     * Display a selected side depending on all sides enable or not.
+     * All sides = vegetables, frites and rice
+     * No all sides = rice or not
      *
-     * @param nbSide         the selected side
+     * @param nbSide         The selected Side
      * @param allSidesEnable enable display for all side or not
      */
     public void displaySelectedSide(int nbSide, boolean allSidesEnable) {
@@ -97,9 +87,9 @@ public class Order {
     }
 
     /**
-     * Display a selected drink
+     * Display a selected drink.
      *
-     * @param nbDrink the selected drink
+     * @param nbDrink The selected drink.
      */
     public void displaySelectedDrink(int nbDrink) {
         switch (nbDrink) {
@@ -109,12 +99,10 @@ public class Order {
             default -> System.out.println("Vous n'avez pas choisi de boisson parmi les choix proposés");
         }
     }
-
     /**
      * Display all available sides depending on all sides enable or not.
      * All sides = vegetables, frites and rice
      * No all sides = rice or not
-     *
      * @param allSideEnable enable display for all side or not
      */
     public void displayAvailableSide(boolean allSideEnable) {
@@ -146,20 +134,23 @@ public class Order {
      *
      * @param category  the category of the question
      * @param responses available responses
+     * @return the number of the selected choice
      */
-    public void askSomething(String category, String[] responses) {
+    public int askSomething(String category, String[] responses) {
         System.out.println("Choix " + category);
         for (int i = 1; i <= responses.length; i++)
             System.out.println(i + " - " + responses[i - 1]);
-        System.out.println("Que souhaitez vous comme " + category + "?");
+        System.out.println("Que souhaitez-vous comme " + category + "?");
         int nbResponse;
         boolean responseIsGood;
         do {
             nbResponse = sc.nextInt();
             responseIsGood = (nbResponse >= 1 && nbResponse <= responses.length);
-            if (responseIsGood)
-                System.out.println("Vous avez choisi comme " + category + " : " + responses[nbResponse - 1]);
-            else {
+            if (responseIsGood) {
+                String choice = "Vous avez choisi comme " + category + " : " + responses[nbResponse - 1];
+                orderSummary += choice + "%n";
+                System.out.println(choice);
+            } else {
                 boolean isVowel = "aeiouy".contains(Character.toString(category.charAt(0)));
                 if (isVowel)
                     System.out.println("Vous n'avez pas choisi d'" + category + " parmi les choix proposés");
@@ -167,14 +158,17 @@ public class Order {
                     System.out.println("Vous n'avez pas choisi de " + category + " parmi les choix proposés");
             }
         } while (!responseIsGood);
+        return nbResponse;
     }
 
     /**
      * Display a question about menu in the standard input, get response and display it
+     *
+     * @return the number of the selected menu
      */
-    public void askMenu() {
+    public int askMenu() {
         String[] menus = {"poulet", "boeuf", "végétarien"};
-        askSomething("menu", menus);
+        return askSomething("menu", menus);
     }
 
     /**
